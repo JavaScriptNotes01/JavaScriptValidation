@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rolsa Technologies - Home</title>
+    <link rel="stylesheet" href="css/home.css">
+</head>
+
+<body>
+    <?php include('header.php'); ?>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-text">
+            <h1>Welcome to Rolsa Technologies</h1>
+            <p>Innovative energy solutions for a smarter, greener future.</p>
+        </div>
+    </section>
+
+    <section class="services-heading">
+        <h2>Make Your Energy Green</h2>
+        <p>Explore our key solutions to help you save money and support the planet.</p>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services">
+        <div class="service-card">
+            <img src="images/solar.png" alt="Solar Panel">
+            <h3>Solar Panels</h3>
+            <p>Discover how solar panels can reduce your electricity bills and support the environment.</p>
+            <a href="solar.php" class="learn-more">Learn More</a>
+        </div>
+
+        <div class="service-card">
+            <img src="images/ev.png" alt="EV Charging">
+            <h3>EV Charging</h3>
+            <p>Charge your vehicle at home quickly and efficiently with our EV solutions.</p>
+            <a href="ev.php" class="learn-more">Learn More</a>
+        </div>
+
+        <div class="service-card">
+            <img src="images/smart.png" alt="Smart Home Energy">
+            <h3>Smart Home Energy</h3>
+            <p>Track and manage your home energy usage with smart tools.</p>
+            <a href="smart.php" class="learn-more">Learn More</a>
+        </div>
+    </section>
+
+    <!-- Carbon Footprint Section -->
+    <section class="carbon-footprint">
+        <div class="carbon-image">
+            <img src="images/carbon-footprint.png" alt="Carbon Footprint">
+        </div>
+        <div class="carbon-text">
+        <h2>Calculate Your Carbon Footprint</h2>
+        <p>Your carbon footprint is the total amount of CO₂ emissions caused by your energy use, travel, and consumption. Our calculator helps you understand your impact so you can make greener choices.</p>
+            <a href="calculator.php" class="cta-button">Calculate Now</a>
+        </div>
+    </section>
+
+    <?php include('footer.php'); ?>
+</body>
+
+</html>
+
+body {
+    background: url('../images/background.png') no-repeat center center;
+    background-size: cover;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #133B1E;
+  }
+  
+
+  .hero {
+    background: url('../images/hero-image.png') no-repeat center center;
+    background-size: 100% auto;
+    height: 500px;
+    position: relative;
+    width: 100%;
+    
+    
+  }
+  
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    z-index: 1;
+    padding: 20px 40px;
+  }
+  
+  .hero-text h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
+  
+  .hero-text p {
+    font-size: 1.4rem;
+  }
+
+  .services-heading {
+    text-align: center;
+    padding: 40px 20px 20px;
+    background-color: #f1f7f2;
+  }
+  
+  .services-heading h2 {
+    font-size: 2.4rem;
+    color: #133B1E;
+    margin-bottom: 10px;
+  }
+  
+  .services-heading p {
+    font-size: 1.2rem;
+    color: #3E2723;
+  }
+  
+  .services {
+    display: flex;
+    justify-content: space-around;
+    padding: 60px 40px;
+    background-color: #ffffff;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  
+  .service-card {
+    background-color: #f1f7f2;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    flex: 1 1 250px;
+    max-width: 300px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .service-card img {
+    width: 250px;
+  height: 250px;
+    object-fit: contain;
+    margin-bottom: 15px;
+  }
+  
+  .service-card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .service-card p {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  .learn-more {
+    display: inline-block;
+    background-color: #133B1E;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .learn-more:hover {
+    background-color: #A5D6A7;
+    color: #133B1E;
+  }
+  
+  .carbon-footprint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9fbf9;
+    padding: 60px 40px;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .carbon-image img {
+    width: 100%;
+    max-width: 400px;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+  
+  .carbon-text {
+    max-width: 500px;
+  }
+  
+  .carbon-text h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+  
+  .carbon-text p {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .cta-button {
+    background-color: #133B1E;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cta-button:hover {
+    background-color: #A5D6A7;
+    color: #133B1E;
+  }
