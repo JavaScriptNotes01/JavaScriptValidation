@@ -1,0 +1,321 @@
+<?php 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rolsa Technologies</title>
+    <link rel="stylesheet" href="css/header.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="images/logo.png" alt="Rolsa Logo">
+    </div>
+
+    <nav>
+        <ul class="nav-links">
+            <li><a href="home.php">Home</a></li>
+            <li><a href="solar.php">Solar Panel</a></li>
+            <li><a href="ev.php">EV</a></li>
+            <li><a href="smart.php">Smart Home Energy</a></li>
+        </ul>
+
+        <div class="nav-icons">
+            <!-- Font Size Dropdown -->
+<div class="dropdown text-size-dropdown">
+    <button aria-label="Text Size Options">
+        <img src="images/Aa-icon.png" alt="Text Size Icon">
+    </button>
+    <div class="dropdown-content">
+        <p class="dropdown-title">Font Size</p>
+        <a href="#" onclick="setFontSize('12px')">Extra Small</a>
+        <a href="#" onclick="setFontSize('14px')">Small</a>
+        <a href="#" onclick="setFontSize('16px')">Medium</a>
+        <a href="#" onclick="setFontSize('18px')">Large</a>
+        <a href="#" onclick="setFontSize('20px')">Extra Large</a>
+    </div>
+</div>
+
+            <!-- Theme Mode Dropdown -->
+            <div class="dropdown mode-dropdown">
+                <button aria-label="Mode Options">
+                    <img src="images/mode-icon.png" alt="Mode Icon">
+                </button>
+                <div class="dropdown-content">
+                <a href="#" onclick="setTheme('light')">Light</a>
+                <a href="#" onclick="setTheme('dark')">Dark</a>
+                </div>
+            </div>
+
+            <!-- Account Dropdown -->
+            <div class="account-dropdown">
+                <img src="images/account.png" alt="Account" class="account-icon">
+                <ul class="account-dropdown-content">
+                    <?php 
+                    if (isset($_SESSION['first_name']) && isset($_SESSION['last_name'])) { 
+                        echo "<li class='hello-user'>Hello, " . htmlspecialchars($_SESSION['first_name']) . " " . htmlspecialchars($_SESSION['last_name']) . "!</li>";
+                        echo "<li><a href='profile.php'>Profile</a></li>";
+                        echo "<li><a href='logout.php'>Log Out</a></li>";
+                    } else { 
+                        echo "<li><a href='login.php'>Log In</a></li>";
+                        echo "<li><a href='signup.php'>Sign Up</a></li>";
+                    } 
+                    ?>
+                </ul>
+            </div>
+
+           
+        </div>
+    </nav>
+</header>
+
+<script>
+    function setFontSize(size) {
+        document.documentElement.style.fontSize = size;
+        localStorage.setItem('textSize', size);
+    }
+
+    function setTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedSize = localStorage.getItem('textSize') ;
+        setFontSize(savedSize);
+
+        const savedTheme = localStorage.getItem('theme') ;
+        setTheme(savedTheme);
+    });
+</script>
+
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    background-color: #CED8CD;
+    color: #3E2723;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Light / Dark Themes */
+  body[data-theme="dark"] {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  body[data-theme="light"] {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  /* Header */
+  header {
+    background-color: #133B1E;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+  }
+  
+  .logo img {
+    height: 60px;
+    width: 60px;
+    object-fit: contain;
+  }
+  
+  /* Navigation */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 30px;
+    width: 100%;
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .nav-links li a:hover {
+    background-color: #A5D6A7;
+    color: #133B1E;
+  }
+  
+  /* Icons */
+  .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .nav-icons img,
+  .dropdown img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 6px;
+    padding: 4px;
+    box-shadow: 0 0 2px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+  }
+  
+  .nav-icons img:hover,
+  .dropdown img:hover {
+    transform: scale(1.05);
+    background-color: #A5D6A7;
+  }
+  
+  /* Dropdown Menu Base */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  /* Dropdown Content */
+  .dropdown-content,
+  .account-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 5px 0;
+    z-index: 1000;
+    min-width: 140px;
+    font-size: 14px;
+  }
+  
+  /* Buttons inside dropdown */
+  .dropdown-content button,
+  .account-dropdown-content li,
+  .account-dropdown-content li a {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: #133B1E;
+    font-size: 14px;
+  }
+  
+  .dropdown-content button:hover,
+  .account-dropdown-content li:hover,
+  .account-dropdown-content li a:hover {
+    background-color: #DDE8DE; /* світло-зелений при наведенні */
+    color: #133B1E;
+  }
+  
+  /* Show on hover */
+  .text-size-dropdown:hover .dropdown-content,
+  .mode-dropdown:hover .dropdown-content,
+  .account-dropdown:hover .account-dropdown-content {
+    display: block;
+  }
+  
+  /* Account Dropdown Specific */
+  .account-dropdown {
+    position: relative;
+  }
+  
+  .account-dropdown-content {
+    right: 0;
+    top: 100%;
+    list-style: none;
+  }
+  
+  /* Remove big text/spacing */
+  .account-dropdown-content .hello-user {
+    font-size: 13px;
+    padding: 8px 12px;
+    font-weight: normal;
+    color: #5A5A5A;
+  }
+  
+  /* Icons */
+  .dropdown img,
+  .account-dropdown img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    border: none;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Footer Section -->
+<footer>
+<link rel="stylesheet" href="css/footer.css">
+    <div class="footer-container">
+        <div class="footer-content">
+            <h2>Rolsa Technologies, London, UK</h2>
+            <p>Email: contact@rolsa.co.uk | Phone: +44 20 1234 5678</p>
+
+            <div class="footer-links">
+                <a href="https://www.facebook.com" target="_blank" class="social-icon">
+                    <img src="images/facebook-icon.png" alt="Facebook">
+                </a>
+                <a href="https://www.instagram.com" target="_blank" class="social-icon">
+                    <img src="images/instagram-icon.png" alt="Instagram">
+                </a>
+                <a href="https://www.twitter.com" target="_blank" class="social-icon">
+                    <img src="images/twitter-icon.png" alt="Twitter">
+                </a>
+            </div>
+
+            <p class="copyright">&copy; 2024 Rolsa Technologies. All rights reserved.</p>
+            <p><a href="policy.php">Privacy Policy</a> | <a href="terms.php">Terms & Conditions</a></p>
+        </div>
+    </div>
+</footer>
