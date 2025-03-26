@@ -1,0 +1,284 @@
+<?php 
+session_start(); 
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Carbon Footprint Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('images/background.png') no-repeat center center;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: #133B1E;
+    }
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .radio-group {
+      margin-bottom: 15px;
+    }
+    .radio-group label {
+      font-weight: normal;
+      display: block;
+      margin-left: 15px;
+    }
+    button {
+      background-color: #133B1E;
+      color: white;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Carbon Footprint Calculator</h1>
+  <form method="POST" action="carbon_result.php">
+
+    <!-- Utility Use -->
+    <label>1. How much electricity (kWh/month)?</label>
+    <input type="number" name="electricity" min="0" required>
+
+    <label>2. How much gas (cubic meters/month)?</label>
+    <input type="number" name="gas" min="0" required>
+
+    <label>3. How much water (liters/month)?</label>
+    <input type="number" name="water" min="0" required>
+
+    <!-- Lifestyle -->
+    <label>4. Do you regularly drive a car?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="car_use" value="3" required> Yes</label>
+      <label><input type="radio" name="car_use" value="2"> Sometimes</label>
+      <label><input type="radio" name="car_use" value="1"> Rarely</label>
+    </div>
+
+    <label>5. Do you fly at least once a year?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="fly" value="3" required> Yes</label>
+      <label><input type="radio" name="fly" value="2"> Sometimes</label>
+      <label><input type="radio" name="fly" value="1"> Rarely/Never</label>
+    </div>
+
+    <label>6. Do you eat meat?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="meat" value="3" required> Daily</label>
+      <label><input type="radio" name="meat" value="2"> Sometimes</label>
+      <label><input type="radio" name="meat" value="1"> Rarely/Never</label>
+    </div>
+
+    <label>7. Do you recycle regularly?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="recycle" value="1" required> Yes</label>
+      <label><input type="radio" name="recycle" value="2"> Sometimes</label>
+      <label><input type="radio" name="recycle" value="3"> No</label>
+    </div>
+
+    <label>8. How often do you use public transport?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="public_transport" value="1" required> Regularly</label>
+      <label><input type="radio" name="public_transport" value="2"> Sometimes</label>
+      <label><input type="radio" name="public_transport" value="3"> Never</label>
+    </div>
+
+    <label>9. How often do you shop for new clothes?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="clothes" value="3" required> Often</label>
+      <label><input type="radio" name="clothes" value="2"> Sometimes</label>
+      <label><input type="radio" name="clothes" value="1"> Rarely</label>
+    </div>
+
+    <label>10. Do you use renewable energy at home?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="renewable" value="1" required> Yes</label>
+      <label><input type="radio" name="renewable" value="2"> Some</label>
+      <label><input type="radio" name="renewable" value="3"> No</label>
+    </div>
+
+<?php 
+session_start(); 
+include('db.php'); 
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $electricity = $_POST['electricity'];
+    $gas = $_POST['gas'];
+    $water = $_POST['water'];
+
+    $car_use = $_POST['car_use'];
+    $fly = $_POST['fly'];
+    $meat = $_POST['meat'];
+    $recycle = $_POST['recycle'];
+    $public_transport = $_POST['public_transport'];
+    $clothes = $_POST['clothes'];
+    $renewable = $_POST['renewable'];
+
+    $total = ($electricity * 0.5) + ($gas * 0.3) + ($water * 0.1);
+    $total += $car_use + $fly + $meat + $recycle + $public_transport + $clothes + $renewable;
+
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+        $sql = "INSERT INTO carbon_footprint (user_id, footprint_result) VALUES ('$user_id', '$total')";
+        mysqli_query($conn, $sql);
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Carbon Result</title>
+  <style>
+  body {
+    font-family: Arial, sans-serif;
+    background: url('images/background.png') no-repeat center center;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #133B1E;
+  }
+
+  .result-container {
+    max-width: 800px;
+    background-color: rgba(255, 255, 255, 0.95);
+    margin: 50px auto;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+  }
+
+  .score-value {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #3E2723;
+    margin-bottom: 10px;
+  }
+
+  .meaning {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+  }
+
+  .meaning.good { color: green; }
+  .meaning.medium { color: orange; }
+  .meaning.high { color: red; }
+
+  .explanation, .tips {
+    margin-top: 20px;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .tips ul {
+    padding-left: 20px;
+  }
+
+  a {
+    color: #133B1E;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .back-button {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  .back-button a {
+    background-color: #133B1E;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+
+  .back-button a:hover {
+    background-color: #0f2f18;
+  }
+</style>
+</head>
+<body>
+  <div class="result-container">
+    <h1>Your Carbon Footprint Score</h1>
+    <div class="score-value"><?php echo round($total, 1); ?></div>
+    
+    <?php 
+    if ($total <= 150) {
+        echo "<p class='meaning good'>Excellent! Your footprint is low. You’re doing great for the planet!</p>";
+    } elseif ($total <= 300) {
+        echo "<p class='meaning medium'>Moderate. You’re on the right track, but there’s room for improvement.</p>";
+    } else {
+        echo "<p class='meaning high'>High. Try to reduce energy use, meat consumption, and travel emissions.</p>";
+    }
+    ?>
+
+    <div class="explanation">
+      <p>Your carbon footprint shows how much CO₂ your lifestyle creates. This includes home energy, transport, water, shopping, and food.</p>
+    </div>
+
+    <div class="tips">
+      <h3>Tips to Reduce Your Footprint:</h3>
+      <ul>
+        <li>Switch to <a href="solar.php">solar panels</a> to reduce electricity use.</li>
+        <li>Use <a href="ev.php">EVs or public transport</a> instead of personal cars.</li>
+        <li>Track home energy with <a href="smart.php">smart energy tools</a>.</li>
+        <li>Eat less meat and more plant-based meals.</li>
+        <li>Fix water leaks and take shorter showers.</li>
+        <li>Buy less fast fashion, recycle regularly.</li>
+      </ul>
+    </div>
+
+    <div class="back-button">
+      <a href="carbon_calculator.php">← Go Back to Calculator</a>
+    </div>
+  </div>
+</body>
+</html>
+
+    <button type="submit">Calculate My Footprint</button>
+  </form>
+</div>
+
+</body>
+</html>
