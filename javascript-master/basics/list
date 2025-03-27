@@ -1,0 +1,161 @@
+<?php 
+session_start();
+include('db.php');
+
+if (!isset($_SESSION['user_id'])) {
+    die("Please log in to track your usage.");
+}
+
+$message = "";
+$total = null;
+
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $electricity = $_POST['electricity'];
+    $gas = $_POST['gas'];
+    $water = $_POST['water'];
+
+    $total = ($electricity * 0.5) + ($gas * 0.3) + ($water * 0.2);
+    $user_id = $_SESSION['user_id'];
+
+    $query = "INSERT INTO tracking_usage_energy (user_id, electricity, gas, water, created_at)
+              VALUES ('$user_id', '$electricity', '$gas', '$water', NOW())";
+    if (mysqli_query($conn, $query)) {
+        $message = "Usage recorded successfully. Total usage score: " . round($total, 1);
+    } else {
+        $message = "Error saving data: " . mysqli_error($conn);
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Track Your Energy Usage</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f8f4;
+      padding: 20px;
+      color: #133B1E;
+    }
+
+    .container {
+      background: white;
+      max-width: 700px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #133B1E;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 20px;
+      background-color: #e8f5e9;
+      padding: 15px;
+      border-left: 5px solid #4caf50;
+    }
+
+    table {
+      margin-top: 30px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #bbb;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #dbead9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Energy Usage Tracker</h1>
+
+  <?php if ($message): ?>
+    <div class="message">
+      <strong><?php echo $message; ?></strong><br>
+      <?php if ($total !== null): ?>
+        This score includes all your entries. Try reducing electricity and gas usage to lower your score.
+      <?php endif; ?>
+    </div>
+  <?php endif; ?>
+
+  <form method="POST">
+    <label>Electricity (kWh):</label>
+    <input type="number" name="electricity" min="0" required>
+
+    <label>Gas (m³):</label>
+    <input type="number" name="gas" min="0" required>
+
+    <label>Water (liters):</label>
+    <input type="number" name="water" min="0" required>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <?php
+  // Show previous records
+  $user_id = $_SESSION['user_id'];
+  $result = mysqli_query($conn, "SELECT * FROM tracking_usage_energy WHERE user_id = '$user_id' ORDER BY created_at DESC");
+
+  if (mysqli_num_rows($result) > 0) {
+      echo "<h2>Your Past Entries</h2>";
+      echo "<table><tr><th>Date</th><th>Electricity</th><th>Gas</th><th>Water</th></tr>";
+      while ($row = mysqli_fetch_assoc($result)) {
+          echo "<tr>
+                  <td>{$row['created_at']}</td>
+                  <td>{$row['electricity']} kWh</td>
+                  <td>{$row['gas']} m³</td>
+                  <td>{$row['water']} L</td>
+                </tr>";
+      }
+      echo "</table>";
+  } else {
+      echo "<p>No usage records found yet.</p>";
+  }
+  ?>
+
+</div>
+
+</body>
+</html>
